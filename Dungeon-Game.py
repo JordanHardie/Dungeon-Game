@@ -6,6 +6,7 @@ def spc():
     print(" ")
 
 #Enter name
+spc()
 name = str(input("What is your name?: "))
 spc()
 
@@ -27,6 +28,12 @@ def RCG(x):
     result = random.choice(x)
     return result
 
+#More shorthand.
+def RND(x, y):
+    result = round(x, y)
+    return result
+
+#Make enemy stats.
 def GenEnemy():
     enemy = {
         "Name" : nameGen(),
@@ -37,7 +44,68 @@ def GenEnemy():
 
     return enemy
 
-#Function for generating enemy names
+#Does math for stat stuff
+def statCalc(From, To):
+    STR = From["STR"]
+    DF = To["DF"]
+
+    DF = float (DF / 100)
+    STR += 100
+    STR = float(STR / 100)
+
+    result = {"DF" : DF, "STR" : STR}
+
+    return result
+
+#Do damage from entity to entity.
+def DoDamage(From, To, dmg):
+    get = statCalc(From, To)
+    HP = To["HP"]
+    STR = get["STR"]
+    DF = get["DF"]
+
+    atkcalc = dmg * STR
+    adj = atkcalc * DF
+
+    X = RND(adj, 0)
+    HP -= X
+    HP = RND(HP, 0)
+
+    X = str(X)
+
+    print(From["Name"] + " did " + X + " dmg to " + To["Name"] + ".")
+    spc()
+    result = {"HP" : HP}
+    To.update(result)
+
+#Increase damage done from entity to entity.
+def DoCrit(From, To, dmg):
+    get = statCalc(From, To)
+    HP = To["HP"]
+    STR = get["STR"]
+    DF = get["DF"]
+ 
+    #Generate critical damage multiplier 
+    crit = RNG(125, 200)
+    crit = float(crit / 100)
+
+    dmg = dmg * STR
+    atkcalc = dmg * crit
+    #Pfft, I didn't increase DF to balance the OP'ness of the crit
+    adj = atkcalc * (DF + 0.1)
+
+    X = RND(adj, 0)
+    HP -= X
+    HP = RND(HP, 0)
+    
+    X = str(crit)
+
+    print(From["Name"] + " had their dmg multipied by " + X + "x.")
+    spc()
+    result = {"HP": HP}
+    To.update(result)
+
+#Function for generating enemy names.
 def nameGen():
     vowel = ["a", "e", "i", "o", "u"]
     const = ["b","c","d","f","g","h","j","k","l","m","n","p","q","r","s","t","v","w","x","y","z"]
