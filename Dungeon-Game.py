@@ -1,6 +1,8 @@
 #Because I need RNG
 import random
 
+turn = 2
+
 #White space
 def spc():
     print(" ")
@@ -148,3 +150,73 @@ def nameGen():
     x = y + z
 
     return x
+
+def playerMove(player, enemy):
+    ask = str(input("What do you do? Type H for help: "))
+    spc()
+
+    if ask.lower() == "h":
+        Ask = str(input("Type a command for help: A, H. : "))
+
+        if Ask.lower() == "a":
+            print("Deal damage to enemy")
+            spc()
+            playerMove(player, enemy)
+
+        elif Ask.lower() == "h":
+            print("Get help menu command")
+            spc()
+            playerMove(player, enemy)
+
+        else:
+            print("You didn't input a valid command!")
+            spc()
+            playerMove(player, enemy)
+
+    elif ask.lower() == "a":
+        x = RNG(1, 20)
+
+        if x == 20:
+            DoCrit(player, enemy, RNG(20, 40))
+
+        elif x == 10:
+            DoDamage(player, enemy, RNG(25, 45))
+
+        else:
+            DoDamage(player, enemy, RNG(20, 40))
+
+    elif ask.lower() == "b":
+        print("Blocked!")
+
+def enemyMove(enemy, player):
+    x = RNG(1, 10)
+
+    if x == 1:
+        DoDamage(enemy, player, RNG(20, 40))
+
+    elif x == 2:
+        y = RNG(1, 20)
+        if y == 20:
+            DoCrit(enemy, player, RNG(20, 40))
+
+        else:
+            DoDamage(enemy, player, RNG(25, 45))
+
+    elif x == 3:
+        print(enemy["Name"] + "'s head is in the clouds!")
+        spc()
+
+    elif x == 4:
+        print(enemy["Name"] + " is preparing something!")
+        spc()
+
+def Main(turn):
+    while turn != 0:
+        if turn % 2 == 0:
+            playerMove()
+            turn += 1
+
+        elif turn % 2 == 1:
+            turn += 1
+
+Main(turn)
