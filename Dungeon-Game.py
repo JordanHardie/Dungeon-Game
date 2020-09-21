@@ -187,6 +187,13 @@ def playerMove(player, enemy):
 
     elif ask.lower() == "b":
         print("Blocked!")
+        spc()
+
+    else:
+        print("You didn't input a valid command!")
+        spc()
+        playerMove(player, enemy)
+
 
 def enemyMove(enemy, player):
     x = RNG(1, 10)
@@ -211,9 +218,11 @@ def enemyMove(enemy, player):
         spc()
 
 def Main(turn):
+    enemy = GenEnemy()
+
     while turn != 0:
         if turn % 2 == 0:
-            playerMove()
+            playerMove(player, enemy)
             turn += 1
 
         elif turn % 2 == 1:
