@@ -156,7 +156,7 @@ def playerMove(player, enemy):
     spc()
 
     if ask.lower() == "h":
-        Ask = str(input("Type a command for help: A, H. : "))
+        Ask = str(input("Type a command for help: A, B, H, P. : "))
 
         if Ask.lower() == "a":
             print("Deal damage to enemy")
@@ -186,8 +186,28 @@ def playerMove(player, enemy):
             DoDamage(player, enemy, RNG(20, 40))
 
     elif ask.lower() == "b":
-        print("Blocked!")
-        spc()
+        HP = player["HP"]
+        x = statCalc(player, enemy)
+        STR = x["STR"] / 100
+
+        scaleCalc = HP * STR * x["DF"]
+        scaleCalc /= 2
+        scaleCalc /= 10
+        scaleCalc += 1
+
+        HP *= scaleCalc
+        DF = x["DF"] * scaleCalc
+        STR_ = x["STR"] * scaleCalc
+
+        HP = RND(HP, 2)
+        DF = RND(DF, 2)
+        STR_ = RND(STR_, 2)
+
+        result = {"HP" : HP, "DF" : DF, "STR" : STR_}
+
+        player.update(result)
+
+        print(player)
 
     else:
         print("You didn't input a valid command!")
