@@ -35,8 +35,18 @@ def RND(x, y):
     result = round(x, y)
     return result
 
+def IsDead(entity):
+    HP = entity["HP"]
+
+    if HP <= 0:
+        return True
+
+    else:
+        return False
+
 #Make enemy stats.
 def GenEnemy():
+    #I intend to make enemies scale with player and I intend to make bosses and elite/champion type enemies.
     enemy = {
         "Name" : nameGen(),
         "HP" : RNG(75, 150),
@@ -154,17 +164,24 @@ def nameGen():
 def playerMove(player, enemy):
     ask = str(input("What do you do? Type H for help: "))
     spc()
-
+    
     if ask.lower() == "h":
-        Ask = str(input("Type a command for help: A, B, H, P. : "))
+        Ask = str(input("Type a command for help: A, B, H, P: "))
+        spc()
 
         if Ask.lower() == "a":
-            print("Deal damage to enemy")
+            print("Deal damage to enemy.")
             spc()
             playerMove(player, enemy)
 
         elif Ask.lower() == "h":
-            print("Get help menu command")
+            print("Brings up the help prompt.")
+            spc()
+            playerMove(player, enemy)
+
+        elif Ask.lower() == "p":
+            print("If the enemies next turn is an attack, you reflect all damage.")
+            print("However, if it's not, all your stats are reduced")
             spc()
             playerMove(player, enemy)
 
@@ -174,40 +191,48 @@ def playerMove(player, enemy):
             playerMove(player, enemy)
 
     elif ask.lower() == "a":
+        #Player has 1 in 20 chance to do crit and has 1 in 4 chance to do extra damage.
         x = RNG(1, 20)
 
         if x == 20:
             DoCrit(player, enemy, RNG(20, 40))
 
-        elif x == 10:
+        elif x in range(1, 6):
+            #Raise min so more damage is guranteed
             DoDamage(player, enemy, RNG(25, 45))
 
         else:
             DoDamage(player, enemy, RNG(20, 40))
 
     elif ask.lower() == "b":
+        #Grab stats and do some pre-math
         HP = player["HP"]
-        x = statCalc(player, enemy)
-        STR = x["STR"] / 100
+        DF = player["DF"] / 100
+        STR = player["STR"] / 100
 
-        scaleCalc = HP * STR * x["DF"]
+        #Balance scale so it isn't op but still useful
+        scaleCalc = HP * STR * DF
         scaleCalc /= 2
-        scaleCalc /= 10
+        scaleCalc /= 100
         scaleCalc += 1
 
+        #Multiply all the stats
         HP *= scaleCalc
-        DF = x["DF"] * scaleCalc
-        STR_ = x["STR"] * scaleCalc
+        DF *= scaleCalc
+        STR *= scaleCalc
 
+        #Round values
         HP = RND(HP, 2)
         DF = RND(DF, 2)
-        STR_ = RND(STR_, 2)
+        STR = RND(STR, 2)
 
-        result = {"HP" : HP, "DF" : DF, "STR" : STR_}
+        #And set the stats back to normal
+        DF *= 100
+        STR *= 100
+
+        result = {"HP" : HP, "DF" : DF, "STR" : STR}
 
         player.update(result)
-
-        print(player)
 
     else:
         print("You didn't input a valid command!")
@@ -241,11 +266,24 @@ def Main(turn):
     enemy = GenEnemy()
 
     while turn != 0:
-        if turn % 2 == 0:
-            playerMove(player, enemy)
-            turn += 1
+        if IsDead(player) == True:
+            print("You died!")
+            turn = 0
 
-        elif turn % 2 == 1:
-            turn += 1
+        elif IsDead(enemy) == True:
+            print(enemy["Name"] + " died!")
+            spc()
+            enemy = GenEnemy()
+            print("Your new enemy is: " + enemy["Name"])
+            spc()
+
+        else:
+            if turn % 2 == 0:
+                playerMove(player, enemy)
+                turn += 1
+
+            else:
+                enemyMove(enemy, player)
+                turn += 1
 
 Main(turn)
