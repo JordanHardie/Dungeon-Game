@@ -165,36 +165,37 @@ def DoCrit(From, To, dmg):
 
     To.update(result)
 
+def enemyMove(enemy, player):
+    x = RNG(1, 10)
+
+    if x == 1:
+        DoDamage(enemy, player, RNG(20, 40))
+
+    elif x == 2:
+        y = RNG(1, 20)
+        if y == 20:
+            DoCrit(enemy, player, RNG(20, 40))
+
+        elif y in range(1, 6):
+            print(enemy["Name"] + " did some extra damage!")
+            spc()
+            DoDamage(enemy, player, RNG(25, 45))
+
+    elif x == 3:
+        print(enemy["Name"] + "'s head is in the clouds!")
+        spc()
+
+    elif x == 4:
+        print(enemy["Name"] + " is preparing something!")
+        spc()
+
 def playerMove(player, enemy):
     ask = str(input("What do you do? Type H for help: "))
     spc()
-    
-    if ask.lower() == "h":
-        Ask = str(input("Type a command for help: A, B, H, P, I: "))
-        spc()
 
-        if Ask.lower() == "a":
-            print("Deal damage to enemy.")
-            spc()
-            playerMove(player, enemy)
+    ask = ask.lower() 
 
-        elif Ask.lower() == "h":
-            print("Brings up the help prompt.")
-            spc()
-            playerMove(player, enemy)
-
-        elif Ask.lower() == "p":
-            print("If the enemies next turn is an attack, you reflect all damage.")
-            print("However, if it's not, all your stats are reduced")
-            spc()
-            playerMove(player, enemy)
-
-        else:
-            print("You didn't input a valid command!")
-            spc()
-            playerMove(player, enemy)
-
-    elif ask.lower() == "a":
+    if ask == "a":
         #Player has 1 in 20 chance to do crit and has 1 in 4 chance to do extra damage.
         x = RNG(1, 20)
 
@@ -203,12 +204,14 @@ def playerMove(player, enemy):
 
         elif x in range(1, 6):
             #Raise min so more damage is guranteed
+            print(player["Name"] + " did some extra damage!")
+            spc()
             DoDamage(player, enemy, RNG(25, 45))
 
         else:
             DoDamage(player, enemy, RNG(20, 40))
 
-    elif ask.lower() == "b":
+    elif ask == "b":
         #Grab stats and do some pre-math
         HP = player["HP"]
         DF = player["DF"] / 100
@@ -238,36 +241,70 @@ def playerMove(player, enemy):
 
         player.update(result)
 
-    elif ask.lower() == "I":
-        
+        enemyMove(enemy, player)
+        enemyMove(enemy, player)
+
+    elif ask == "h":
+        Ask = str(input("Type a command for help: A, B, H, I, P: "))
+        Ask = Ask.lower()
+        spc()
+
+        if Ask == "a":
+            print("Deal damage to enemy.")
+            spc()
+            playerMove(player, enemy)
+
+        elif Ask == "b":
+            print("Increases stats exponentially (by a small margin), but you lose two turns each time you use it.")
+            spc()
+
+        elif Ask == "h":
+            print("Brings up the help prompt.")
+            spc()
+            playerMove(player, enemy)
+
+        elif Ask == "i":
+            print("Displays information on you and the enemy.")
+            print("Player gets -1% to DF and enemy gets +1% to STR.")
+            spc()
+
+        elif Ask == "p":
+            print("If the enemies next turn is an attack, you reflect all damage.")
+            print("However, if it's not, all your stats are reduced.")
+            spc()
+            playerMove(player, enemy)
+
+        else:
+            print("You didn't input a valid command!")
+            spc()
+            playerMove(player, enemy)
+
+    elif ask == "i":
+        #Nerf info gathering a bit
+        DF = player["DF"]
+        STR = enemy["STR"]
+        DF /= 1.01
+        STR *= 1.01
+        DF = RND(DF, 2)
+        STR = RND(STR, 2)
+        p = {"DF" : DF}
+        e = {"STR" : STR}
+        player.update(p)
+        enemy.update(e)
+
+        print("You feel like you are slighty weaker now...")
+        spc()
+
+        print(player)
+        spc()
+        print(enemy)   
+        spc()
+        playerMove(player, enemy) 
 
     else:
         print("You didn't input a valid command!")
         spc()
         playerMove(player, enemy)
-
-
-def enemyMove(enemy, player):
-    x = RNG(1, 10)
-
-    if x == 1:
-        DoDamage(enemy, player, RNG(20, 40))
-
-    elif x == 2:
-        y = RNG(1, 20)
-        if y == 20:
-            DoCrit(enemy, player, RNG(20, 40))
-
-        else:
-            DoDamage(enemy, player, RNG(25, 45))
-
-    elif x == 3:
-        print(enemy["Name"] + "'s head is in the clouds!")
-        spc()
-
-    elif x == 4:
-        print(enemy["Name"] + " is preparing something!")
-        spc()
 
 def Main(turn):
     enemy = GenEnemy()
@@ -275,6 +312,18 @@ def Main(turn):
     while turn != 0:
         if IsDead(player) == True:
             print("You died!")
+            spc()
+            turn -= 1
+            turn /= 2
+            turn = RND(turn, 0)
+
+            if turn <= 1:
+                print("You lasted one turn! That or some error has occured!")
+
+            else:
+                print("You lasted " + str(turn) + " turns!")
+
+            spc()
             turn = 0
 
         elif IsDead(enemy) == True:
