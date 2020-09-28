@@ -222,7 +222,7 @@ def EnemyMove(enemy, player):
         print(enemy["Name"] + " sneezes")
         spc()
 
-def Help():
+def Help(player, enemy):
     Ask = str(input("Type a command for help: A, B, C, H, I, P: "))
     Ask = Ask.lower()
     spc()
@@ -346,8 +346,8 @@ def PlayerMove(player, enemy):
 
     #Help.
     elif ask == "h":
-        Help()
-        
+        Help(player, enemy)
+
     #Info.
     elif ask == "i":
         #Nerf info gathering a bit.
