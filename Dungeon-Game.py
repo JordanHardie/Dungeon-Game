@@ -13,10 +13,11 @@ import random
 pcharge = 0
 echarge = 0
 
+
 # White space
 def spc():
     print(" ")
-  
+
 
 # I want to include both end points just to make things easier and less confusing.
 def RNG(x, y):
@@ -396,7 +397,6 @@ def PlayerMove(player, enemy):
 def Main():
     turn = 2
 
-
     player = GenPlayer()
     enemy = GenEnemy()
     while turn != 0:
@@ -438,3 +438,4 @@ def Main():
 
 
 Main()
+print("\n")
