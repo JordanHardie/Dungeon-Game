@@ -239,6 +239,7 @@ def Help(player, enemy):
     elif Ask == "c":
         print("Build up a charged attack, once used three times, it activates.")
         spc()
+        PlayerMove(player, enemy)
 
     elif Ask == "h":
         print("Brings up the help prompt.")
