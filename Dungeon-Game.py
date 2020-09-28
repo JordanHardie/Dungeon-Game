@@ -1,7 +1,16 @@
 #Because I need RNG
 import random
 
-turn = 2
+pcharge = 0
+echarge = 0
+
+def PC(state, entity):
+    if state == True:
+        entity += 1
+        return entity
+        
+    else:
+        return entity
 
 #White space
 def spc():
@@ -66,21 +75,26 @@ def GenName():
 
     return x
 
-#Enter name
-spc()
-name = str(input("What is your name?: "))
-if name == "" or name == " ":
-    name = GenName()
-spc()
+#I made the player name thing a function just for fun.
+def GenPlayer():
+    spc()
+    name = str(input("What is your name?: "))
+    if name == "" or name == " ":
+        name = GenName()
+    spc()
 
-#Player information
-player = {
-    "Name" : name,
-    "HP" : 100,
-    "DF" : 50,
-    "STR" : 25
-}
+    #Player information
+    player = {
+        "Name" : name,
+        "HP" : 100,
+        "DF" : 50,
+        "STR" : 25 }
 
+    return player
+
+player = GenPlayer()
+
+#Checks if entity is 'dead' or not.
 def IsDead(entity):
     HP = entity["HP"]
 
@@ -165,6 +179,7 @@ def DoCrit(From, To, dmg):
 
     To.update(result)
 
+#Make the enemy do stuff.
 def enemyMove(enemy, player):
     x = RNG(1, 10)
 
@@ -186,9 +201,18 @@ def enemyMove(enemy, player):
         spc()
 
     elif x == 4:
-        print(enemy["Name"] + " is preparing something!")
-        spc()
+        if echarge >= 3:
+            print(enemy["Name"] + " wildy charges you!")
+            spc()
+            DoDamage(enemy, player, RNG(30, 55))
+            echarge = 0
 
+        else:
+            print(enemy["Name"] + " is preparing something!")
+            spc()
+            echarge += 1
+
+#Player input logic stuff.
 def playerMove(player, enemy):
     ask = str(input("What do you do? Type H for help: "))
     spc()
@@ -244,6 +268,22 @@ def playerMove(player, enemy):
         enemyMove(enemy, player)
         enemyMove(enemy, player)
 
+    elif ask == "c":
+        if pcharge >= 3:
+            print(player["Name"] + " wildy charges " + enemy["Name"] + "!")
+            spc()
+            DoDamage(player, enemy, RNG(30, 55))
+            pcharge = 0
+            return pcharge
+
+        elif pcharge < 3:
+            print(player["Name"] + " is preparing something!")
+            spc()
+            pcharge += 1
+
+            print(pcharge)
+            return pcharge
+
     elif ask == "h":
         Ask = str(input("Type a command for help: A, B, H, I, P: "))
         Ask = Ask.lower()
@@ -256,6 +296,10 @@ def playerMove(player, enemy):
 
         elif Ask == "b":
             print("Increases stats exponentially (by a small margin), but you lose two turns each time you use it.")
+            spc()
+
+        elif Ask == "c":
+            print("Build up a charged attack, once used three times, it activates.")
             spc()
 
         elif Ask == "h":
@@ -306,7 +350,10 @@ def playerMove(player, enemy):
         spc()
         playerMove(player, enemy)
 
-def Main(turn):
+#Make the game work.
+def Main():
+    turn = 2
+
     enemy = GenEnemy()
 
     while turn != 0:
@@ -342,4 +389,4 @@ def Main(turn):
                 enemyMove(enemy, player)
                 turn += 1
 
-Main(turn)
+Main()
