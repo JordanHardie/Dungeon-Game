@@ -222,6 +222,45 @@ def EnemyMove(enemy, player):
         print(enemy["Name"] + " sneezes")
         spc()
 
+def Help():
+    Ask = str(input("Type a command for help: A, B, C, H, I, P: "))
+    Ask = Ask.lower()
+    spc()
+
+    if Ask == "a":
+        print("Deal damage to enemy.")
+        spc()
+        PlayerMove(player, enemy)
+
+    elif Ask == "b":
+        print("Increases stats exponentially (by a small margin), but you lose two turns each time you use it.")
+        spc()
+
+    elif Ask == "c":
+        print("Build up a charged attack, once used three times, it activates.")
+        spc()
+
+    elif Ask == "h":
+        print("Brings up the help prompt.")
+        spc()
+        PlayerMove(player, enemy)
+
+    elif Ask == "i":
+        print("Displays information on you and the enemy.")
+        print("Player gets -1% to DF and enemy gets +1% to STR.")
+        spc()
+
+    elif Ask == "p":
+        print("If the enemies next turn is an attack, you reflect all damage.")
+        print("However, if it's not, all your stats are reduced.")
+        spc()
+        PlayerMove(player, enemy)
+
+    else:
+        print("You didn't input a valid command!")
+        spc()
+        PlayerMove(player, enemy)
+
 #Player input logic stuff.
 def PlayerMove(player, enemy):
     global pcharge
@@ -307,44 +346,8 @@ def PlayerMove(player, enemy):
 
     #Help.
     elif ask == "h":
-        Ask = str(input("Type a command for help: A, B, C, H, I, P: "))
-        Ask = Ask.lower()
-        spc()
-
-        if Ask == "a":
-            print("Deal damage to enemy.")
-            spc()
-            PlayerMove(player, enemy)
-
-        elif Ask == "b":
-            print("Increases stats exponentially (by a small margin), but you lose two turns each time you use it.")
-            spc()
-
-        elif Ask == "c":
-            print("Build up a charged attack, once used three times, it activates.")
-            spc()
-
-        elif Ask == "h":
-            print("Brings up the help prompt.")
-            spc()
-            PlayerMove(player, enemy)
-
-        elif Ask == "i":
-            print("Displays information on you and the enemy.")
-            print("Player gets -1% to DF and enemy gets +1% to STR.")
-            spc()
-
-        elif Ask == "p":
-            print("If the enemies next turn is an attack, you reflect all damage.")
-            print("However, if it's not, all your stats are reduced.")
-            spc()
-            PlayerMove(player, enemy)
-
-        else:
-            print("You didn't input a valid command!")
-            spc()
-            PlayerMove(player, enemy)
-
+        Help()
+        
     #Info.
     elif ask == "i":
         #Nerf info gathering a bit.
