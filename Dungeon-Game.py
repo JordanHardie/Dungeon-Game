@@ -6,50 +6,50 @@
     * http://www.wtfpl.net/ for more details.
 '''
 
-#Because I need RNG
+# Because I need RNG
 import random
 
-#Cancer
+# Cancer
 pcharge = 0
 echarge = 0
 
-#White space
+# White space
 def spc():
     print(" ")
 
-#I want to include both end points just to make things easier and less confusing.
+# I want to include both end points just to make things easier and less confusing.
 def RNG(x, y):
     result = random.randint(x, y)
     return result
 
-#Shorthand to make things easier.
+# Shorthand to make things easier.
 def RCG(x):
     result = random.choice(x)
     return result
 
-#More shorthand.
+# More shorthand.
 def RND(x, y):
     result = round(x, y)
     return result
 
-#Function for generating names.
+# Function for generating names.
 def GenName():
     vowel = ["a", "e", "i", "o", "u"]
-    const = ["b","c","d","f","g","h","j","k","l","m","n","p","q","r","s","t","v","w","x","y","z"]
+    const = ["b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "y", "z"]
 
     def Set(x, y):
         x = RCG(x)
         y = RCG(y)
         z = x + y
         return z
-    
+
     def Multiple():
         final = ""
         x = RNG(1, 3)
         final += Set(const, vowel)
 
         for i in range(x):
-            #Visual studio was having a massive fit over i not being used.
+            # Visual studio was having a massive fit over i not being used.
             i = i
             y = RNG(1,4)
 
@@ -67,7 +67,7 @@ def GenName():
 
         return final
     
-    #Yay string slicing, definitely easy to understand and implent.
+    # Yay string slicing, definitely easy to understand and implent.
     x = Multiple()
     y = x[:1:]
     z = x[1::]
@@ -76,7 +76,7 @@ def GenName():
 
     return x
 
-#I made the player name thing a function just for fun.
+# I made the player name thing a function just for fun.
 def GenPlayer():
     spc()
     name = str(input("What is your name?: "))
@@ -84,16 +84,16 @@ def GenPlayer():
         name = GenName()
     spc()
 
-    #Player information
+    # Player information
     player = {
-        "Name" : name,
-        "HP" : 100,
-        "DF" : 50,
-        "STR" : 25 }
+        "Name": name,
+        "HP": 100,
+        "DF": 50,
+        "STR": 25 }
 
     return player
 
-#Checks if entity is 'dead' or not.
+# Checks if entity is 'dead' or not.
 def IsDead(entity):
     HP = entity["HP"]
 
@@ -103,19 +103,19 @@ def IsDead(entity):
     else:
         return False
 
-#Make enemy stats.
+# Make enemy stats.
 def GenEnemy():
-    #I intend to make enemies scale with player and I intend to make bosses and elite/champion type enemies.
+    # I intend to make enemies scale with player and I intend to make bosses and elite/champion type enemies.
     enemy = {
-        "Name" : GenName(),
-        "HP" : RNG(75, 150),
-        "DF" : RNG(30, 70),
-        "STR" : RNG(20, 30)
+        "Name": GenName(),
+        "HP": RNG(75, 150),
+        "DF": RNG(30, 70),
+        "STR": RNG(20, 30)
     }
 
     return enemy
 
-#Does math for stat stuff
+# Does math for stat stuff
 def statCalc(From, To):
     STR = From["STR"]
     DF = To["DF"]
@@ -124,11 +124,11 @@ def statCalc(From, To):
     STR += 100
     STR = float(STR / 100)
 
-    result = {"DF" : DF, "STR" : STR}
+    result = {"DF": DF, "STR": STR}
 
     return result
 
-#Do damage from entity to entity.
+# Do damage from entity to entity.
 def DoDamage(From, To, dmg):
     get = statCalc(From, To)
     HP = To["HP"]
@@ -146,30 +146,29 @@ def DoDamage(From, To, dmg):
 
     print(From["Name"] + " did " + X + " dmg to " + To["Name"] + ".")
     spc()
-    result = {"HP" : HP}
+    result = {"HP": HP}
 
     To.update(result)
 
-#Increase damage done from entity to entity.
+# Increase damage done from entity to entity.
 def DoCrit(From, To, dmg):
     get = statCalc(From, To)
     HP = To["HP"]
     STR = get["STR"]
     DF = get["DF"]
- 
-    #Generate critical damage multiplier 
+
+    # Generate critical damage multiplier
     crit = RNG(125, 200)
     crit = float(crit / 100)
 
     dmg = dmg * STR
     atkcalc = dmg * crit
-    #Pfft, I didn't increase DF to balance the OP'ness of the crit
+    # Pfft, I didn't increase DF to balance the OP'ness of the crit
     adj = atkcalc * (DF + 0.1)
 
     X = RND(adj, 0)
     HP -= X
     HP = RND(HP, 0)
-    
     X = str(crit)
 
     print(From["Name"] + " had their dmg multipied by " + X + "x.")
@@ -178,7 +177,7 @@ def DoCrit(From, To, dmg):
 
     To.update(result)
 
-#Make the enemy do stuff.
+# Make the enemy do stuff.
 def EnemyMove(enemy, player):
     global echarge
 
@@ -264,7 +263,7 @@ def Help(player, enemy):
         spc()
         PlayerMove(player, enemy)
 
-#Player input logic stuff.
+# Player input logic stuff.
 def PlayerMove(player, enemy):
     global pcharge
     global echarge
@@ -272,18 +271,18 @@ def PlayerMove(player, enemy):
     ask = str(input("What do you do? Type H for help: "))
     spc()
 
-    ask = ask.lower() 
+    ask = ask.lower()
 
-    #Attack.
+    # Attack.
     if ask == "a":
-        #Player has 1 in 20 chance to do crit and has 1 in 4 chance to do extra damage.
+        # Player has 1 in 20 chance to do crit and has 1 in 4 chance to do extra damage.
         x = RNG(1, 20)
 
         if x == 20:
             DoCrit(player, enemy, RNG(20, 40))
 
         elif x in range(1, 6):
-            #Raise min so more damage is guranteed.
+            # Raise min so more damage is guranteed.
             print(player["Name"] + " did some extra damage!")
             spc()
             DoDamage(player, enemy, RNG(25, 45))
@@ -291,34 +290,34 @@ def PlayerMove(player, enemy):
         else:
             DoDamage(player, enemy, RNG(20, 40))
 
-    #Block.
+    # Block.
     elif ask == "b":
-        #Grab stats and do some pre-math.
+        # Grab stats and do some pre-math.
         HP = player["HP"] / 100
         DF = player["DF"] / 100
         STR = player["STR"] / 100
 
-        #Balance scale so it isn't op but still useful.
+        # Balance scale so it isn't op but still useful.
         scaleCalc = HP * STR * DF
         scaleCalc /= 8
         scaleCalc += 1
 
-        #Multiply all the stats.
+        # Multiply all the stats.
         HP *= scaleCalc
         DF *= scaleCalc
         STR *= scaleCalc
 
-        #Round values.
+        # Round values.
         HP = RND(HP, 2)
         DF = RND(DF, 2)
         STR = RND(STR, 2)
 
-        #And set the stats back to normal.
+        # And set the stats back to normal.
         HP *= 100
         DF *= 100
         STR *= 100
         
-        #Round them again
+        # Round them again
         HP = RND(HP, 2)
         DF = RND(DF, 2)
         STR = RND(STR, 2)
@@ -330,7 +329,7 @@ def PlayerMove(player, enemy):
         EnemyMove(enemy, player)
         EnemyMove(enemy, player)
 
-    #Charge.
+    # Charge.
     elif ask == "c":
         if pcharge >= 2:
             print(player["Name"] + " wildy charges " + enemy["Name"] + "!")
@@ -347,13 +346,13 @@ def PlayerMove(player, enemy):
 
             return pcharge
 
-    #Help.
+    # Help.
     elif ask == "h":
         Help(player, enemy)
 
-    #Info.
+    # Info.
     elif ask == "i":
-        #Nerf info gathering a bit.
+        # Nerf info gathering a bit.
         DF = player["DF"]
         STR = enemy["STR"]
         DF /= 1.01
@@ -370,16 +369,16 @@ def PlayerMove(player, enemy):
 
         print(player)
         spc()
-        print(enemy)   
+        print(enemy)
         spc()
-        PlayerMove(player, enemy) 
+        PlayerMove(player, enemy)
 
     else:
         print("You didn't input a valid command!")
         spc()
         PlayerMove(player, enemy)
 
-#Make the game work.
+# Make the game work.
 def Main():
     turn = 2
 
@@ -387,7 +386,7 @@ def Main():
     enemy = GenEnemy()
 
     while turn != 0:
-        if IsDead(player) == True:
+        if IsDead(player):
             print("You died!")
             spc()
             turn -= 1
@@ -407,7 +406,7 @@ def Main():
             spc()
             quit() 
 
-        elif IsDead(enemy) == True:
+        elif IsDead(enemy):
             print(enemy["Name"] + " died!")
             spc()
             enemy = GenEnemy()
