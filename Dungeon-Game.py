@@ -1,16 +1,9 @@
 #Because I need RNG
 import random
 
+#Cancer
 pcharge = 0
 echarge = 0
-
-def PC(state, entity):
-    if state == True:
-        entity += 1
-        return entity
-        
-    else:
-        return entity
 
 #White space
 def spc():
@@ -91,8 +84,6 @@ def GenPlayer():
         "STR" : 25 }
 
     return player
-
-player = GenPlayer()
 
 #Checks if entity is 'dead' or not.
 def IsDead(entity):
@@ -180,18 +171,21 @@ def DoCrit(From, To, dmg):
     To.update(result)
 
 #Make the enemy do stuff.
-def enemyMove(enemy, player):
+def EnemyMove(enemy, player):
+    global echarge
+
     x = RNG(1, 10)
 
     if x == 1:
         DoDamage(enemy, player, RNG(20, 40))
 
     elif x == 2:
-        y = RNG(1, 20)
-        if y == 20:
+        z = RNG(1, 20)
+
+        if z == 20:
             DoCrit(enemy, player, RNG(20, 40))
 
-        elif y in range(1, 6):
+        elif z in range(1, 6):
             print(enemy["Name"] + " did some extra damage!")
             spc()
             DoDamage(enemy, player, RNG(25, 45))
@@ -200,25 +194,34 @@ def enemyMove(enemy, player):
         print(enemy["Name"] + "'s head is in the clouds!")
         spc()
 
-    elif x == 4:
-        if echarge >= 3:
+    elif x == 4 or x == 5:
+        if echarge >= 2:
             print(enemy["Name"] + " wildy charges you!")
             spc()
             DoDamage(enemy, player, RNG(30, 55))
             echarge = 0
 
+            return echarge
+
         else:
             print(enemy["Name"] + " is preparing something!")
             spc()
-            echarge += 1
+    
+    elif x == 6:
+        print(enemy["Name"] + " sneezes")
+        spc()
 
 #Player input logic stuff.
-def playerMove(player, enemy):
+def PlayerMove(player, enemy):
+    global pcharge
+    global echarge
+
     ask = str(input("What do you do? Type H for help: "))
     spc()
 
     ask = ask.lower() 
 
+    #Attack.
     if ask == "a":
         #Player has 1 in 20 chance to do crit and has 1 in 4 chance to do extra damage.
         x = RNG(1, 20)
@@ -227,7 +230,7 @@ def playerMove(player, enemy):
             DoCrit(player, enemy, RNG(20, 40))
 
         elif x in range(1, 6):
-            #Raise min so more damage is guranteed
+            #Raise min so more damage is guranteed.
             print(player["Name"] + " did some extra damage!")
             spc()
             DoDamage(player, enemy, RNG(25, 45))
@@ -235,29 +238,30 @@ def playerMove(player, enemy):
         else:
             DoDamage(player, enemy, RNG(20, 40))
 
+    #Block.
     elif ask == "b":
-        #Grab stats and do some pre-math
+        #Grab stats and do some pre-math.
         HP = player["HP"]
         DF = player["DF"] / 100
         STR = player["STR"] / 100
 
-        #Balance scale so it isn't op but still useful
+        #Balance scale so it isn't op but still useful.
         scaleCalc = HP * STR * DF
         scaleCalc /= 2
         scaleCalc /= 100
         scaleCalc += 1
 
-        #Multiply all the stats
+        #Multiply all the stats.
         HP *= scaleCalc
         DF *= scaleCalc
         STR *= scaleCalc
 
-        #Round values
+        #Round values.
         HP = RND(HP, 2)
         DF = RND(DF, 2)
         STR = RND(STR, 2)
 
-        #And set the stats back to normal
+        #And set the stats back to normal.
         DF *= 100
         STR *= 100
 
@@ -265,34 +269,36 @@ def playerMove(player, enemy):
 
         player.update(result)
 
-        enemyMove(enemy, player)
-        enemyMove(enemy, player)
+        EnemyMove(enemy, player)
+        EnemyMove(enemy, player)
 
+    #Charge.
     elif ask == "c":
-        if pcharge >= 3:
+        if pcharge >= 2:
             print(player["Name"] + " wildy charges " + enemy["Name"] + "!")
             spc()
-            DoDamage(player, enemy, RNG(30, 55))
+            DoDamage(player, enemy, RNG(40, 60))
             pcharge = 0
+
             return pcharge
 
-        elif pcharge < 3:
+        else:
             print(player["Name"] + " is preparing something!")
             spc()
             pcharge += 1
 
-            print(pcharge)
             return pcharge
 
+    #Help.
     elif ask == "h":
-        Ask = str(input("Type a command for help: A, B, H, I, P: "))
+        Ask = str(input("Type a command for help: A, B, C, H, I, P: "))
         Ask = Ask.lower()
         spc()
 
         if Ask == "a":
             print("Deal damage to enemy.")
             spc()
-            playerMove(player, enemy)
+            PlayerMove(player, enemy)
 
         elif Ask == "b":
             print("Increases stats exponentially (by a small margin), but you lose two turns each time you use it.")
@@ -305,7 +311,7 @@ def playerMove(player, enemy):
         elif Ask == "h":
             print("Brings up the help prompt.")
             spc()
-            playerMove(player, enemy)
+            PlayerMove(player, enemy)
 
         elif Ask == "i":
             print("Displays information on you and the enemy.")
@@ -316,15 +322,16 @@ def playerMove(player, enemy):
             print("If the enemies next turn is an attack, you reflect all damage.")
             print("However, if it's not, all your stats are reduced.")
             spc()
-            playerMove(player, enemy)
+            PlayerMove(player, enemy)
 
         else:
             print("You didn't input a valid command!")
             spc()
-            playerMove(player, enemy)
+            PlayerMove(player, enemy)
 
+    #Info.
     elif ask == "i":
-        #Nerf info gathering a bit
+        #Nerf info gathering a bit.
         DF = player["DF"]
         STR = enemy["STR"]
         DF /= 1.01
@@ -343,17 +350,18 @@ def playerMove(player, enemy):
         spc()
         print(enemy)   
         spc()
-        playerMove(player, enemy) 
+        PlayerMove(player, enemy) 
 
     else:
         print("You didn't input a valid command!")
         spc()
-        playerMove(player, enemy)
+        PlayerMove(player, enemy)
 
 #Make the game work.
 def Main():
     turn = 2
 
+    player = GenPlayer()
     enemy = GenEnemy()
 
     while turn != 0:
@@ -382,11 +390,11 @@ def Main():
 
         else:
             if turn % 2 == 0:
-                playerMove(player, enemy)
+                PlayerMove(player, enemy)
                 turn += 1
 
             else:
-                enemyMove(enemy, player)
+                EnemyMove(enemy, player)
                 turn += 1
 
 Main()
