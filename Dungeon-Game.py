@@ -248,8 +248,10 @@ def Help(player, enemy):
 
     elif Ask == "i":
         print("Displays information on you and the enemy.")
+        spc()
         print("Player gets -1% to DF and enemy gets +1% to STR.")
         spc()
+        PlayerMove(player, enemy)
 
     elif Ask == "p":
         print("If the enemies next turn is an attack, you reflect all damage.")
