@@ -16,21 +16,25 @@ echarge = 0
 # White space
 def spc():
     print(" ")
+    
 
 # I want to include both end points just to make things easier and less confusing.
 def RNG(x, y):
     result = random.randint(x, y)
     return result
 
+
 # Shorthand to make things easier.
 def RCG(x):
     result = random.choice(x)
     return result
 
+
 # More shorthand.
 def RND(x, y):
     result = round(x, y)
     return result
+
 
 # Function for generating names.
 def GenName():
@@ -42,6 +46,7 @@ def GenName():
         y = RCG(y)
         z = x + y
         return z
+
 
     def Multiple():
         final = ""
@@ -67,6 +72,7 @@ def GenName():
 
         return final
     
+
     # Yay string slicing, definitely easy to understand and implent.
     x = Multiple()
     y = x[:1:]
@@ -75,6 +81,7 @@ def GenName():
     x = y + z
 
     return x
+
 
 # I made the player name thing a function just for fun.
 def GenPlayer():
@@ -93,6 +100,7 @@ def GenPlayer():
 
     return player
 
+
 # Checks if entity is 'dead' or not.
 def IsDead(entity):
     HP = entity["HP"]
@@ -102,6 +110,7 @@ def IsDead(entity):
 
     else:
         return False
+
 
 # Make enemy stats.
 def GenEnemy():
@@ -115,6 +124,7 @@ def GenEnemy():
 
     return enemy
 
+
 # Does math for stat stuff
 def statCalc(From, To):
     STR = From["STR"]
@@ -127,6 +137,7 @@ def statCalc(From, To):
     result = {"DF": DF, "STR": STR}
 
     return result
+
 
 # Do damage from entity to entity.
 def DoDamage(From, To, dmg):
@@ -149,6 +160,7 @@ def DoDamage(From, To, dmg):
     result = {"HP": HP}
 
     To.update(result)
+
 
 # Increase damage done from entity to entity.
 def DoCrit(From, To, dmg):
@@ -176,6 +188,7 @@ def DoCrit(From, To, dmg):
     result = {"HP": HP}
 
     To.update(result)
+
 
 # Make the enemy do stuff.
 def EnemyMove(enemy, player):
@@ -216,10 +229,11 @@ def EnemyMove(enemy, player):
             echarge += 1
 
             return echarge
-    
+
     elif x == 6:
         print(enemy["Name"] + " sneezes")
         spc()
+
 
 def Help(player, enemy):
     Ask = str(input("Type a command for help: A, B, C, H, I, P: "))
@@ -262,6 +276,7 @@ def Help(player, enemy):
         print("You didn't input a valid command!")
         spc()
         PlayerMove(player, enemy)
+
 
 # Player input logic stuff.
 def PlayerMove(player, enemy):
@@ -316,13 +331,13 @@ def PlayerMove(player, enemy):
         HP *= 100
         DF *= 100
         STR *= 100
-        
+
         # Round them again
         HP = RND(HP, 2)
         DF = RND(DF, 2)
         STR = RND(STR, 2)
 
-        result = {"HP" : HP, "DF" : DF, "STR" : STR}
+        result = {"HP": HP, "DF": DF, "STR": STR}
 
         player.update(result)
 
@@ -359,8 +374,8 @@ def PlayerMove(player, enemy):
         STR *= 1.01
         DF = RND(DF, 2)
         STR = RND(STR, 2)
-        p = {"DF" : DF}
-        e = {"STR" : STR}
+        p = {"DF": DF}
+        e = {"STR": STR}
         player.update(p)
         enemy.update(e)
 
@@ -378,9 +393,11 @@ def PlayerMove(player, enemy):
         spc()
         PlayerMove(player, enemy)
 
+
 # Make the game work.
 def Main():
     turn = 2
+
 
     player = GenPlayer()
     enemy = GenEnemy()
@@ -404,7 +421,7 @@ def Main():
 
             print(quit)
             spc()
-            quit() 
+            quit()
 
         elif IsDead(enemy):
             print(enemy["Name"] + " died!")
@@ -423,3 +440,5 @@ def Main():
                 turn += 1
 
 Main()
+
+
