@@ -16,7 +16,7 @@ echarge = 0
 # White space
 def spc():
     print(" ")
-    
+  
 
 # I want to include both end points just to make things easier and less confusing.
 def RNG(x, y):
@@ -47,7 +47,6 @@ def GenName():
         z = x + y
         return z
 
-
     def Multiple():
         final = ""
         x = RNG(1, 3)
@@ -56,7 +55,7 @@ def GenName():
         for i in range(x):
             # Visual studio was having a massive fit over i not being used.
             i = i
-            y = RNG(1,4)
+            y = RNG(1, 4)
 
             if y == 1:
                 final += Set(vowel, const)
@@ -71,7 +70,6 @@ def GenName():
                 final += random.choice(const)
 
         return final
-    
 
     # Yay string slicing, definitely easy to understand and implent.
     x = Multiple()
@@ -96,7 +94,7 @@ def GenPlayer():
         "Name": name,
         "HP": 100,
         "DF": 50,
-        "STR": 25 }
+        "STR": 25}
 
     return player
 
@@ -130,7 +128,7 @@ def statCalc(From, To):
     STR = From["STR"]
     DF = To["DF"]
 
-    DF = float (DF / 100)
+    DF = float(DF / 100)
     STR += 100
     STR = float(STR / 100)
 
@@ -401,7 +399,6 @@ def Main():
 
     player = GenPlayer()
     enemy = GenEnemy()
-
     while turn != 0:
         if IsDead(player):
             print("You died!")
@@ -439,6 +436,5 @@ def Main():
                 EnemyMove(enemy, player)
                 turn += 1
 
+
 Main()
-
-
