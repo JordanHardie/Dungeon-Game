@@ -214,6 +214,9 @@ def EnemyMove(enemy, player):
         else:
             print(enemy["Name"] + " is preparing something!")
             spc()
+            echarge += 1
+
+            return echarge
     
     elif x == 6:
         print(enemy["Name"] + " sneezes")
@@ -249,14 +252,13 @@ def PlayerMove(player, enemy):
     #Block.
     elif ask == "b":
         #Grab stats and do some pre-math.
-        HP = player["HP"]
+        HP = player["HP"] / 100
         DF = player["DF"] / 100
         STR = player["STR"] / 100
 
         #Balance scale so it isn't op but still useful.
         scaleCalc = HP * STR * DF
-        scaleCalc /= 2
-        scaleCalc /= 100
+        scaleCalc /= 8
         scaleCalc += 1
 
         #Multiply all the stats.
@@ -270,8 +272,14 @@ def PlayerMove(player, enemy):
         STR = RND(STR, 2)
 
         #And set the stats back to normal.
+        HP *= 100
         DF *= 100
         STR *= 100
+        
+        #Round them again
+        HP = RND(HP, 2)
+        DF = RND(DF, 2)
+        STR = RND(STR, 2)
 
         result = {"HP" : HP, "DF" : DF, "STR" : STR}
 
