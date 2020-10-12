@@ -114,12 +114,23 @@ def IsDead(entity):
 # Make enemy stats.
 def GenEnemy():
     # I intend to make enemies scale with player and I intend to make bosses and elite/champion type enemies.
-    enemy = {
-        "Name": GenName(),
-        "HP": RNG(75, 150),
-        "DF": RNG(30, 70),
-        "STR": RNG(20, 30)
-    }
+    x = RNG(1, 20)
+
+    if x == 20:
+        enemy = {
+            "Name" : "Campion " + GenEnemy(),
+            "HP": RNG(85, 200),
+            "DF": RNG(40, 90),
+            "STR": RNG(30, 40)
+        }
+
+    else:
+        enemy = {
+            "Name": GenName(),
+            "HP": RNG(75, 150),
+            "DF": RNG(30, 70),
+            "STR": RNG(20, 30)
+        }
 
     return enemy
 
@@ -175,7 +186,7 @@ def DoCrit(From, To, dmg):
     dmg = dmg * STR
     atkcalc = dmg * crit
     # Pfft, I didn't increase DF to balance the OP'ness of the crit
-    adj = atkcalc * (DF + 0.1)
+    adj = atkcalc * (DF + 0.15)
 
     X = RND(adj, 0)
     HP -= X
