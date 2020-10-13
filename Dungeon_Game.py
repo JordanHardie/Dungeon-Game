@@ -52,7 +52,7 @@ def CalcDMG(dmg, From, To, _bool):
 
     atkcalc = dmg * STR
 
-    if _bool == True:
+    if _bool:
         adj = atkcalc * DF
         X = RND(adj, 0)
         X = str(X)
@@ -198,10 +198,27 @@ def DoCrit(From, To, dmg):
     CalcDMG(dmg, From, To, False)
 
 
+def EnemyCharge(enemy, player):
+    global echarge
+    
+    if echarge >= 2:
+        print(enemy["Name"] + " wildy charges you!")
+        spc()
+        DoDamage(enemy, player, RNG(30, 55))
+        echarge = 0
+
+        return echarge
+
+    else:
+        print(enemy["Name"] + " is preparing something!")
+        spc()
+        echarge += 1
+
+        return echarge
+
+
 # Make the enemy do stuff.
 def EnemyMove(enemy, player):
-    global echarge
-
     x = RNG(1, 10)
 
     if x == 1:
@@ -223,20 +240,7 @@ def EnemyMove(enemy, player):
         spc()
 
     elif x == 4 or x == 5:
-        if echarge >= 2:
-            print(enemy["Name"] + " wildy charges you!")
-            spc()
-            DoDamage(enemy, player, RNG(30, 55))
-            echarge = 0
-
-            return echarge
-
-        else:
-            print(enemy["Name"] + " is preparing something!")
-            spc()
-            echarge += 1
-
-            return echarge
+        EnemyCharge(enemy, player)
 
     elif x == 6:
         print(enemy["Name"] + " sneezes")
@@ -254,7 +258,7 @@ def EnemyMove(enemy, player):
             UST("HP", 0, enemy)
 
         else:
-            EnemyMove(enemy, player)    
+            EnemyMove(enemy, player)
 
     elif x == 9:
         y = RNG(1, 3)
