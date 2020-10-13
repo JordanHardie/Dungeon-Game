@@ -405,7 +405,7 @@ def PlayerMove(player, enemy):
 
 
 # Make the game work.
-def Test_Main():
+def Main():
     turn = 2
 
     player = GenPlayer()
@@ -448,4 +448,4 @@ def Test_Main():
                 turn += 1
 
 
-Test_Main()
+Main()
