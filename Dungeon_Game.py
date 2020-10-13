@@ -157,7 +157,7 @@ def GenEnemy():
 
     if x == 20:
         enemy = {
-            "Name": "Campion " + GenEnemy(),
+            "Name": "Champion " + GenEnemy(),
             "HP": RNG(85, 200),
             "DF": RNG(40, 90),
             "STR": RNG(30, 40)
