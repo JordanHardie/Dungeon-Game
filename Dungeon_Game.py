@@ -118,7 +118,7 @@ def GenEnemy():
 
     if x == 20:
         enemy = {
-            "Name" : "Campion " + GenEnemy(),
+            "Name": "Campion " + GenEnemy(),
             "HP": RNG(85, 200),
             "DF": RNG(40, 90),
             "STR": RNG(30, 40)
@@ -405,7 +405,7 @@ def PlayerMove(player, enemy):
 
 
 # Make the game work.
-def Main():
+def Test_Main():
     turn = 2
 
     player = GenPlayer()
@@ -448,4 +448,4 @@ def Main():
                 turn += 1
 
 
-Main()
+Test_Main()
