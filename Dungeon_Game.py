@@ -37,6 +37,45 @@ def RND(x, y):
     return result
 
 
+# Simplify stat updating
+def UST(tag, val, entity):
+    result = {tag: val}
+    entity.update(result)
+
+
+# Complied the functions that do damage into one
+def CalcDMG(dmg, From, To, _bool):
+    get = statCalc(From, To)
+    HP = To["HP"]
+    STR = get["STR"]
+    DF = get["DF"]
+
+    atkcalc = dmg * STR
+
+    if _bool == True:
+        adj = atkcalc * DF
+        X = RND(adj, 0)
+        X = str(X)
+
+        print(From["Name"] + " did " + X + " dmg to " + To["Name"] + ".")
+        X = RND(adj, 0)
+
+    else:
+        crit = RNG(125, 200)
+        crit = float(crit / 100)
+        _atkcalc = atkcalc * crit
+        adj = _atkcalc * (DF + 0.15)
+
+        X = str(crit)
+        print(From["Name"] + " had their dmg multipied by " + X + "x.")
+        X = RND(_atkcalc, 0)
+
+    HP -= X
+    HP = RND(HP, 0)
+    UST("HP", HP, To)
+    spc()
+
+
 # Function for generating names.
 def GenName():
     vowel = ["a", "e", "i", "o", "u"]
@@ -151,53 +190,12 @@ def statCalc(From, To):
 
 # Do damage from entity to entity.
 def DoDamage(From, To, dmg):
-    get = statCalc(From, To)
-    HP = To["HP"]
-    STR = get["STR"]
-    DF = get["DF"]
-
-    atkcalc = dmg * STR
-    adj = atkcalc * DF
-
-    X = RND(adj, 0)
-    HP -= X
-    HP = RND(HP, 0)
-
-    X = str(X)
-
-    print(From["Name"] + " did " + X + " dmg to " + To["Name"] + ".")
-    spc()
-    result = {"HP": HP}
-
-    To.update(result)
+    CalcDMG(dmg, From, To, True)
 
 
 # Increase damage done from entity to entity.
 def DoCrit(From, To, dmg):
-    get = statCalc(From, To)
-    HP = To["HP"]
-    STR = get["STR"]
-    DF = get["DF"]
-
-    # Generate critical damage multiplier
-    crit = RNG(125, 200)
-    crit = float(crit / 100)
-
-    dmg = dmg * STR
-    atkcalc = dmg * crit
-    # Pfft, I didn't increase DF to balance the OP'ness of the crit
-    adj = atkcalc * (DF + 0.15)
-
-    X = RND(adj, 0)
-    HP -= X
-    HP = RND(HP, 0)
-    X = str(crit)
-
-    print(From["Name"] + " had their dmg multipied by " + X + "x.")
-    spc()
-    result = {"HP": HP}
-
-    To.update(result)
+    CalcDMG(dmg, From, To, False)
 
 
 # Make the enemy do stuff.
@@ -210,12 +208,12 @@ def EnemyMove(enemy, player):
         DoDamage(enemy, player, RNG(20, 40))
 
     elif x == 2:
-        z = RNG(1, 20)
+        y = RNG(1, 20)
 
-        if z == 20:
+        if y == 20:
             DoCrit(enemy, player, RNG(20, 40))
 
-        elif z in range(1, 6):
+        elif y in range(1, 6):
             print(enemy["Name"] + " did some extra damage!")
             spc()
             DoDamage(enemy, player, RNG(25, 45))
@@ -242,6 +240,30 @@ def EnemyMove(enemy, player):
 
     elif x == 6:
         print(enemy["Name"] + " sneezes")
+        spc()
+
+    elif x == 7:
+        DoDamage(enemy, player, RNG(10, 30))
+
+    elif x == 8:
+        y = RNG(1, 1000)
+
+        if y == 1000:
+            print(enemy["Name"] + " died from air poisioning!")
+            spc()
+            UST("HP", 0, enemy)
+
+        else:
+            EnemyMove(enemy, player)    
+
+    elif x == 9:
+        y = RNG(1, 3)
+        for i in range(y):
+            i = i
+            DoDamage(enemy, player, RNG(10, 20))
+
+    elif x == 10:
+        print(enemy["Name"] + " looks the other way.")
         spc()
 
 
@@ -352,7 +374,6 @@ def PlayerMove(player, enemy):
         player.update(result)
 
         EnemyMove(enemy, player)
-        EnemyMove(enemy, player)
 
     # Charge.
     elif ask == "c":
@@ -384,10 +405,9 @@ def PlayerMove(player, enemy):
         STR *= 1.01
         DF = RND(DF, 2)
         STR = RND(STR, 2)
-        p = {"DF": DF}
-        e = {"STR": STR}
-        player.update(p)
-        enemy.update(e)
+
+        UST("DF", DF, player)
+        UST("STR", STR, enemy)
 
         print("You feel like you are slighty weaker now...")
         spc()
