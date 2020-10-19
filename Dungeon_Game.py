@@ -198,6 +198,7 @@ def DoCrit(From, To, dmg):
     CalcDMG(dmg, From, To, False)
 
 
+# Simplfy enemy movement
 def EnemyCharge(enemy, player):
     global echarge
     
